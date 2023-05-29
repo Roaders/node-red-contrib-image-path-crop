@@ -11,8 +11,6 @@ export default function (RED: NodeAPI) {
     function loadImage(this: Node, config: ILoadImageNode) {
         RED.nodes.createNode(this, config);
 
-        console.log(`CREATING NODE (${typeof config.path}): ${config.path}`, config.path);
-
         this.on('input', (msg: NodeMessage) => {
             let path: string | undefined;
 
