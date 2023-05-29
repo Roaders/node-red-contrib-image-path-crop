@@ -1,0 +1,45 @@
+<script type="text/javascript">
+    RED.nodes.registerType('load-image',{
+        category: 'function',
+        color: '#a6bbcf',
+        defaults: {
+            name: {value:""},
+            path: {}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "file.png",
+        label: function() {
+            return this.name||"load-image";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="load-image">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-path"><i class="fa fa-tag"></i> Path</label>
+        <input type="text" id="node-input-path" placeholder="Image Path">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="load-image">
+    <p>Loads an opencv image and converts it to a Buffer</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+
+        <dt>payload
+            <span class="property-type">string</span>
+        </dt>
+        <p>The path to the image. </p>
+
+    </dl>
+
+    <h3>Output</h3>
+       <p>An opencv image encoded as a Buffer.</p>
+</script>
