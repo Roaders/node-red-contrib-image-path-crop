@@ -4,7 +4,8 @@
         color: '#a6bbcf',
         defaults: {
             name: {value:""},
-            path: {}
+            path: {},
+            outputPath: {},
         },
         inputs:1,
         outputs:1,
@@ -24,6 +25,13 @@
     <div class="form-row">
         <label for="node-input-path"><i class="fa fa-tag"></i> Path</label>
         <input type="text" id="node-input-path" placeholder="Image Path">
+        <p>Optional. Must be set in node config or as payload.path if payload.image is not passed from load image node</p>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-outputPath"><i class="fa fa-tag"></i> Output Path</label>
+        <input type="text" id="node-input-outputPath" placeholder="Output Path">
+        <p>Optional. If set on node config or on payload.outputPath image will be saved after processing</p>
     </div>
 </script>
 

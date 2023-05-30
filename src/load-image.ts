@@ -12,10 +12,12 @@ export default function (RED: NodeAPI) {
         RED.nodes.createNode(this, config);
 
         this.on('input', (msg: NodeMessage) => {
+            const payload = (msg.payload as ILoadImageNode) ?? {};
+
             let path: string | undefined;
 
-            if (typeof msg.payload === 'string') {
-                path = msg.payload;
+            if (typeof payload === 'string') {
+                path = payload;
             } else if (typeof config.path === 'string') {
                 path = config.path;
             }
@@ -28,16 +30,12 @@ export default function (RED: NodeAPI) {
             path = resolve(path);
 
             const fileName = basename(path);
-
-            this.status({ fill: 'blue', text: `Loading ${fileName}...` });
-
             const rawImage = cv.imread(path);
-
             const buffer = cv.imencode('.jpg', rawImage);
 
             this.status({ fill: 'green', text: `Loaded ${fileName}` });
 
-            msg.payload = buffer;
+            msg.payload = { image: buffer };
             this.send(msg);
         });
     }
