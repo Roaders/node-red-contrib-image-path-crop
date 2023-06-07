@@ -4,13 +4,21 @@
         color: '#a6bbcf',
         defaults: {
             name: {value:""},
-            path: {}
+            path: { required: true},
+            pathType: { value: "str", required: true}
         },
         inputs:1,
         outputs:1,
         icon: "file.png",
         label: function() {
             return this.name||"load-image";
+        },
+        oneditprepare: () => {
+            $("#node-input-path").typedInput({
+                type:"msg",
+                types:["str", "msg", "flow", "global"],
+                typeField: "#node-input-pathType"
+            })
         }
     });
 </script>
@@ -23,13 +31,13 @@
 
     <div class="form-row">
         <label for="node-input-path"><i class="fa fa-tag"></i> Path</label>
-        <input type="text" id="node-input-path" placeholder="Image Path">
-        <p>Required. Must be set in node config or as payload.path</p>
+        <input type="text" id="node-input-path">
+        <input type="hidden" id="node-input-pathType" placeholder="Image Path">
     </div>
 </script>
 
 <script type="text/html" data-help-name="load-image">
-    <p>Loads an opencv image and converts it to a Buffer</p>
+    <p>Loads an image and converts it to a Buffer</p>
 
     <h3>Inputs</h3>
     <dl class="message-properties">

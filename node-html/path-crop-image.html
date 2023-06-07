@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('persective-transform',{
+    RED.nodes.registerType('path-crop',{
         category: 'function',
         color: '#a6bbcf',
         defaults: {
@@ -11,12 +11,12 @@
         outputs:1,
         icon: "file.png",
         label: function() {
-            return this.name||"persective-transform";
+            return this.name||"path-crop";
         }
     });
 </script>
 
-<script type="text/html" data-template-name="persective-transform">
+<script type="text/html" data-template-name="path-crop">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -35,7 +35,7 @@
     </div>
 </script>
 
-<script type="text/html" data-help-name="persective-transform">
+<script type="text/html" data-help-name="path-crop">
     <p>Loads an opencv image and converts it to a Buffer</p>
 
     <h3>Inputs</h3>
