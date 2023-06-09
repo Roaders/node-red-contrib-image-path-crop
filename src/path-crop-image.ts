@@ -1,5 +1,5 @@
 import { NodeAPI, Node, NodeMessage } from 'node-red';
-import { loadImageBuffer } from './helpers';
+import { getPropertyValue, loadImageBuffer } from './helpers';
 import { createCanvas, loadImage } from 'canvas';
 import { writeFileSync } from 'fs';
 
@@ -8,10 +8,12 @@ type Point = { x: number; y: number };
 type Corners = [Point, Point, Point, ...Point[]];
 
 interface IPerspectiveTransform {
-    image?: Buffer;
-    imagePath?: string;
+    image?: string;
+    imageType?: string;
+    cropPath?: string;
+    cropPathType?: string;
     outputPath?: string;
-    cropPath?: Corners;
+    outputPathType?: string;
 }
 
 interface IPerspectiveTransformNode extends IPerspectiveTransform, Node {
@@ -25,29 +27,50 @@ export default function (RED: NodeAPI) {
         this.on('input', async (msg: NodeMessage) => {
             const payload = (msg.payload as IPerspectiveTransform) ?? {};
 
-            const cropPath = payload.cropPath;
+            let image: unknown;
+            let cropPath: unknown;
+            let buffer: Buffer;
+
+            try {
+                image = await getPropertyValue<string>(RED, this, config.image, config.imageType, msg);
+            } catch (e) {
+                this.status({ fill: 'red', text: 'Unable to load image. image and imageType must be defined' });
+                return;
+            }
+
+            if (image instanceof Buffer) {
+                buffer = image;
+            } else if (typeof image === 'string') {
+                try {
+                    ({ buffer } = await loadImageBuffer(image));
+                } catch (err: unknown) {
+                    this.status({ fill: 'red', text: (err as Error).message });
+                    return;
+                }
+            } else {
+                this.status({
+                    fill: 'red',
+                    text: 'Could not resolve image. Ensure that image resolves to a string or a buffer.',
+                });
+                return;
+            }
+
+            try {
+                cropPath = await getPropertyValue<Corners>(RED, this, config.cropPath, config.cropPathType, msg);
+            } catch (e) {
+                this.status({ fill: 'red', text: 'Unable to resolve crop path' });
+                return;
+            }
+
+            let outputPath: string | undefined;
+
+            try {
+                outputPath = await getPropertyValue<string>(RED, this, config.outputPath, config.outputPathType, msg);
+            } catch (e) {
+                //nothing
+            }
 
             if (isCorners(cropPath)) {
-                let buffer: Buffer;
-
-                if (hasImageBuffer(payload)) {
-                    buffer = payload.image;
-                } else {
-                    let fileName: string;
-
-                    try {
-                        ({ buffer, fileName } = await loadImageBuffer(payload.imagePath, config.imagePath));
-                    } catch (err: unknown) {
-                        this.status({ fill: 'red', text: (err as Error).message });
-                        return;
-                    }
-
-                    this.status({ fill: 'green', text: `Loaded ${fileName}` });
-
-                    msg.payload = { image: buffer };
-                    this.send(msg);
-                }
-
                 const image = await loadImage(buffer);
 
                 // Create a canvas with the desired rectangular dimensions
@@ -73,8 +96,6 @@ export default function (RED: NodeAPI) {
 
                 const croppedBuffer = cropCanvas.toBuffer('image/jpeg');
 
-                const outputPath: string | undefined = payload.outputPath ?? config.outputPath;
-
                 if (typeof outputPath === 'string') {
                     writeFileSync(outputPath, croppedBuffer);
 
@@ -96,7 +117,7 @@ export default function (RED: NodeAPI) {
         });
     }
 
-    RED.nodes.registerType('path-crop', transformImage);
+    RED.nodes.registerType('path-crop-image', transformImage);
 }
 
 function getDimensions(points: Corners): {
@@ -116,12 +137,6 @@ function getDimensions(points: Corners): {
     const height = bottom - top;
 
     return { top, left, right, bottom, width, height };
-}
-
-function hasImageBuffer<T = unknown>(value: T): value is Required<Pick<IPerspectiveTransform, 'image'>> & T {
-    const message = value as IPerspectiveTransform;
-
-    return message != null && message.image instanceof Buffer;
 }
 
 function isCorners(value: unknown): value is Corners {

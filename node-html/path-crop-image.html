@@ -1,41 +1,74 @@
 <script type="text/javascript">
-    RED.nodes.registerType('path-crop',{
-        category: 'function',
+    RED.nodes.registerType('path-crop-image',{
+        paletteLabel: "Path Crop Image",
+        category: 'Image Tools',
         color: '#a6bbcf',
         defaults: {
             name: {value:""},
-            path: {},
-            outputPath: {},
+            image: { value: 'payload.image', required: true},
+            imageType: { value: "msg", required: true},
+            cropPath: { },
+            cropPathType: { value: "msg", required: true },
+            outputPath: { },
+            outputPathType: { value: "str", required: true },
         },
         inputs:1,
         outputs:1,
         icon: "file.png",
         label: function() {
-            return this.name||"path-crop";
+            return this.name||"path-crop-image";
+        },
+        oneditprepare: () => {
+            $("#node-input-image").typedInput({
+                type:"msg",
+                types:["str", "msg", "flow", "global", "bin"],
+                typeField: "#node-input-imageType"
+            });
+
+            $("#node-input-cropPath").typedInput({
+                type:"msg",
+                types:["msg", "flow", "global", "json"],
+                typeField: "#node-input-cropPathType"
+            })
+
+            $("#node-input-outputPath").typedInput({
+                type:"msg",
+                types:["str", "msg", "flow", "global"],
+                typeField: "#node-input-outputPathType"
+            })
         }
     });
 </script>
 
-<script type="text/html" data-template-name="path-crop">
+<script type="text/html" data-template-name="path-crop-image">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 
     <div class="form-row">
-        <label for="node-input-path"><i class="fa fa-tag"></i> Path</label>
-        <input type="text" id="node-input-path" placeholder="Image Path">
-        <p>Optional. Must be set in node config or as payload.path if payload.image is not passed from load image node</p>
+        <label for="node-input-image"><i class="fa fa-tag"></i> Image</label>
+        <input type="text" id="node-input-image">
+        <input type="hidden" id="node-input-imageType" placeholder="Image">
+        <p>Must be either a string indicating the path to load the image from or a buffer containing an image</p>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-cropPath"><i class="fa fa-tag"></i> Crop Path</label>
+        <input type="text" id="node-input-cropPath">
+        <input type="hidden" id="node-input-cropPathType">
+        <p>An array of points indicating the path of the crop area.</p>
     </div>
 
     <div class="form-row">
         <label for="node-input-outputPath"><i class="fa fa-tag"></i> Output Path</label>
         <input type="text" id="node-input-outputPath" placeholder="Output Path">
-        <p>Optional. If set on node config or on payload.outputPath image will be saved after processing</p>
+        <input type="hidden" id="node-input-outputPathType">
+        <p>Optional. If set image will be saved after processing</p>
     </div>
 </script>
 
-<script type="text/html" data-help-name="path-crop">
+<script type="text/html" data-help-name="path-crop-image">
     <p>Loads an opencv image and converts it to a Buffer</p>
 
     <h3>Inputs</h3>

@@ -1,5 +1,6 @@
 import { basename, resolve } from 'path';
 import { promises } from 'fs';
+import { NodeAPI, NodeMessage, Node } from 'node-red';
 
 export async function loadImageBuffer(
     ...paths: [string | undefined, ...(string | undefined)[]]
@@ -17,4 +18,28 @@ export async function loadImageBuffer(
     const fileName = basename(sourcePath);
 
     return { buffer, sourcePath, fileName };
+}
+
+export function getPropertyValue<T>(
+    RED: NodeAPI,
+    node: Node,
+    value: string | undefined,
+    type: string | undefined,
+    msg: NodeMessage
+): Promise<T | undefined> {
+    return new Promise((resolve, reject) => {
+        if (value == null || value === '' || type == null || type === '') {
+            reject(new Error(`value and type must be defined`));
+            return;
+        }
+
+        RED.util.evaluateNodeProperty(value, type, node, msg, (err, result) => {
+            if (err != null) {
+                reject(err);
+                return;
+            }
+
+            resolve(result);
+        });
+    });
 }

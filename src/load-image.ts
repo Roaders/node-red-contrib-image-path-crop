@@ -1,5 +1,5 @@
 import { NodeAPI, Node, NodeMessage } from 'node-red';
-import { loadImageBuffer } from './helpers';
+import { getPropertyValue, loadImageBuffer } from './helpers';
 
 interface ILoadImageNode extends Node {
     name: string;
@@ -12,7 +12,7 @@ export default function (RED: NodeAPI) {
         RED.nodes.createNode(this, config);
 
         this.on('input', async (msg: NodeMessage) => {
-            let filePath: string;
+            let filePath: string | undefined;
             try {
                 filePath = await getPropertyValue<string>(RED, this, config.path, config.pathType, msg);
             } catch (e) {
@@ -38,28 +38,4 @@ export default function (RED: NodeAPI) {
     }
 
     RED.nodes.registerType('load-image', loadImage);
-}
-
-function getPropertyValue<T>(
-    RED: NodeAPI,
-    node: Node,
-    value: string | undefined,
-    type: string | undefined,
-    msg: NodeMessage
-): Promise<T> {
-    return new Promise((resolve, reject) => {
-        if (value == null || value === '' || type == null || type === '') {
-            reject(new Error(`value and type must be defined`));
-            return;
-        }
-
-        RED.util.evaluateNodeProperty(value, type, node, msg, (err, result) => {
-            if (err != null) {
-                reject(err);
-                return;
-            }
-
-            resolve(result);
-        });
-    });
 }

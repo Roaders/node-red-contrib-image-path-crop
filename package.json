@@ -38,7 +38,7 @@
     "node-red": {
         "nodes": {
             "load-image": "dist/load-image.js",
-            "path-crop": "dist/path-crop.js"
+            "path-crop": "dist/path-crop-image.js"
         }
     },
     "dependencies": {

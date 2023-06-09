@@ -1,6 +1,7 @@
 <script type="text/javascript">
     RED.nodes.registerType('load-image',{
-        category: 'function',
+        paletteLabel: "Load Image",
+        category: 'Image Tools',
         color: '#a6bbcf',
         defaults: {
             name: {value:""},
@@ -31,8 +32,8 @@
 
     <div class="form-row">
         <label for="node-input-path"><i class="fa fa-tag"></i> Path</label>
-        <input type="text" id="node-input-path">
-        <input type="hidden" id="node-input-pathType" placeholder="Image Path">
+        <input type="text" id="node-input-path" placeholder="Image Path">
+        <input type="hidden" id="node-input-pathType">
     </div>
 </script>
 
