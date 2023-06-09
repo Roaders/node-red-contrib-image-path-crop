@@ -69,18 +69,57 @@
 </script>
 
 <script type="text/html" data-help-name="path-crop-image">
-    <p>Loads an opencv image and converts it to a Buffer</p>
+    <p>Crops an irregular shaped path from an image</p>
 
     <h3>Inputs</h3>
     <dl class="message-properties">
 
-        <dt>payload
+        <dt>image
+            <span class="property-type">string | Buffer</span>
+        </dt>
+        <p>An existing Buffer containing the image or a string containing the path of the image to load.</p>
+
+        <dt>cropPath
+            <span class="property-type">json</span>
+        </dt>
+        <p>An array of points which form a path that is to be cut from the image.</p>
+        <p>The array must consist of at least 3 points.</p>
+        <p>For Example:</p>
+        <p>
+            [
+                {
+                    "x": 530,
+                    "y": 460
+                },
+                {
+                    "x": 215,
+                    "y": 800
+                },
+                {
+                    "x": 933,
+                    "y": 800
+                },
+                {
+                    "x": 650,
+                    "y": 450
+                }
+            ]
+        </p>
+
+        
+        <dt>outputPath
             <span class="property-type">string</span>
         </dt>
-        <p>The path to the image. </p>
-
+        <p>Optional. If specified the image is saved to this path.</p>
     </dl>
 
-    <h3>Output</h3>
-       <p>An opencv image encoded as a Buffer.</p>
+    <h3>Output</h3>    
+    <dl class="message-properties">
+
+        <dt>payload
+            <span class="property-type">Buffer</span>
+        </dt>
+        <p>The cropped image.</p>
+
+    </dl>
 </script>

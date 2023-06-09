@@ -32,7 +32,7 @@ export default function (RED: NodeAPI) {
 
             this.status({ fill: 'green', text: `Loaded ${fileName}` });
 
-            msg.payload = { image: buffer };
+            msg.payload = buffer;
             this.send(msg);
         });
     }
