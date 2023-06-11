@@ -2,11 +2,11 @@
 
 Crops an image to an irregular path:
 
-![alt text](./assets/linear-perspective-walking-railroad_small.jpg)
+![alt text](https://raw.githubusercontent.com/Roaders/node-red-contrib-image-path-crop/main/assets/linear-perspective-walking-railroad_small.jpg)
 
 becomes
 
-![alt text](./assets/output_small.jpg)
+![alt text](https://raw.githubusercontent.com/Roaders/node-red-contrib-image-path-crop/main/assets/output_small.jpg)
 
 ## Nodes
 
