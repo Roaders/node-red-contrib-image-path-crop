@@ -15,7 +15,7 @@
         "prepublishOnly": "npm run build-release",
         "build-release": "npm run clean && npm run build"
     },
-    "keywords": [],
+    "keywords": ["node-red"],
     "author": "",
     "license": "ISC",
     "devDependencies": {
