@@ -1,4 +1,4 @@
-# @roaders/node-red-contrib-image-path-crop
+# node-red-contrib-image-path-crop
 
 Crops an image to an irregular path:
 
